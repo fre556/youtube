@@ -1,0 +1,1 @@
+python gpuremoval.py input.mp4 output.mp4 template.png --gpu
