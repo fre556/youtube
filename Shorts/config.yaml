@@ -1,0 +1,11 @@
+ffmpeg_path:   "C:/ffmpeg/ffmpeg-master-latest-win64-gpl/ffmpeg-master-latest-win64-gpl/bin/ffmpeg.exe"
+video_range: [281, 282]
+video_directory: "./Example"
+output_directory: "./Results"
+font_path: "./Fonts/Bangers-Regular.ttf"
+text_overlay: "Sample Text Overlay"
+text_position: ['center', 'top']
+music_folder: "./Music"
+interval_duration: 15
+start_index: 1  # Start naming files from 1
+debug: True
