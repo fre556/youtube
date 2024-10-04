@@ -1,0 +1,27 @@
+2024-08-04 21:07:15,462 - INFO - Starting YouTube video upload session.
+2024-08-04 21:08:57,480 - ERROR - An error occurred: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF775878132+13538]
+	Microsoft::Applications::Events::EventProperty::~EventProperty [0x00007FF775801DE9+595465]
+	(No symbol) [0x00007FF77561E6CF]
+	(No symbol) [0x00007FF775662960]
+	(No symbol) [0x00007FF775662A1F]
+	(No symbol) [0x00007FF77569D627]
+	(No symbol) [0x00007FF77568203F]
+	(No symbol) [0x00007FF775658147]
+	(No symbol) [0x00007FF77569B1EE]
+	(No symbol) [0x00007FF775681C63]
+	(No symbol) [0x00007FF77565766E]
+	(No symbol) [0x00007FF77565683C]
+	(No symbol) [0x00007FF775657221]
+	Microsoft::Applications::Events::EventProperty::to_string [0x00007FF775A396D4+1099860]
+	Microsoft::Applications::Events::EventProperty::~EventProperty [0x00007FF77577D8FC+53532]
+	Microsoft::Applications::Events::EventProperty::~EventProperty [0x00007FF775770E25+1605]
+	Microsoft::Applications::Events::EventProperty::to_string [0x00007FF775A38665+1095653]
+	Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF77580C961+27777]
+	Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF775806CE4+4100]
+	Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF775806E1B+4411]
+	Microsoft::Applications::Events::EventProperty::~EventProperty [0x00007FF7757FCFA0+575424]
+	BaseThreadInitThunk [0x00007FF9B6C97374+20]
+	RtlUserThreadStart [0x00007FF9B737CC91+33]
+
