@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinterdnd2 import DND_FILES, TkinterDnD
 from tkinter import messagebox, filedialog
-from PIL import Image, ImageEnhance, ImageTk, ImageFilter
+from PIL import Image, ImageEnhance, ImageTk, ImageFilter, ImageOps
 import os
 
 # Initialize global variable for the image
@@ -16,6 +16,23 @@ def load_image(input_path):
     except Exception as e:
         raise Exception(f"Error loading image: {str(e)}")
 
+def apply_cartoon_effect(img, intensity, alpha):
+    # Convert image to grayscale for edge detection
+    edges = img.convert('L').filter(ImageFilter.FIND_EDGES)
+    edges = ImageOps.invert(edges).convert('RGB')
+    
+    # Apply smoothing filters to give a more cartoon-like appearance
+    for _ in range(intensity):
+        img = img.filter(ImageFilter.SMOOTH_MORE)
+
+    # Blend original image with edges to emphasize lines
+    img = Image.blend(img, edges, alpha=alpha)
+    
+    # Apply posterization to reduce the number of colors
+    img = img.quantize(colors=32).convert('RGB')
+    
+    return img
+
 def update_preview():
     global preview_image, original_image
     if original_image is None:
@@ -27,6 +44,7 @@ def update_preview():
         brightness_factor = brightness_slider.get()
         contrast_factor = contrast_slider.get()
         cartoon_intensity = cartoon_slider.get()
+        cartoon_alpha = cartoon_alpha_slider.get() / 10.0
 
         img = original_image.copy()
         sharpener = ImageEnhance.Sharpness(img)
@@ -38,9 +56,7 @@ def update_preview():
 
         # Apply cartoon effect if checkbox is selected
         if cartoon_var.get():
-            for _ in range(cartoon_intensity):
-                img = img.filter(ImageFilter.EDGE_ENHANCE).convert('RGB')
-                img = img.filter(ImageFilter.SMOOTH).filter(ImageFilter.SMOOTH)
+            img = apply_cartoon_effect(img, cartoon_intensity, cartoon_alpha)
 
         # Resize if checkbox is selected
         if resize_var.get():
@@ -71,6 +87,7 @@ def process_dropped_file(event):
         brightness_slider.config(state=tk.NORMAL)
         contrast_slider.config(state=tk.NORMAL)
         cartoon_slider.config(state=tk.NORMAL)
+        cartoon_alpha_slider.config(state=tk.NORMAL)
         resize_checkbox.config(state=tk.NORMAL)
         cartoon_checkbox.config(state=tk.NORMAL)
         download_button.config(state=tk.NORMAL)
@@ -85,6 +102,7 @@ def download_image():
         brightness_factor = brightness_slider.get()
         contrast_factor = contrast_slider.get()
         cartoon_intensity = cartoon_slider.get()
+        cartoon_alpha = cartoon_alpha_slider.get() / 10.0
 
         img = original_image.copy()
         sharpener = ImageEnhance.Sharpness(img)
@@ -96,9 +114,7 @@ def download_image():
 
         # Apply cartoon effect if checkbox is selected
         if cartoon_var.get():
-            for _ in range(cartoon_intensity):
-                img = img.filter(ImageFilter.EDGE_ENHANCE).convert('RGB')
-                img = img.filter(ImageFilter.SMOOTH).filter(ImageFilter.SMOOTH)
+            img = apply_cartoon_effect(img, cartoon_intensity, cartoon_alpha)
 
         # Resize if checkbox is selected
         if resize_var.get():
@@ -129,6 +145,7 @@ def reset_image():
         brightness_slider.set(1.0)
         contrast_slider.set(1.0)
         cartoon_slider.set(1)
+        cartoon_alpha_slider.set(5)
         resize_var.set(False)
         cartoon_var.set(False)
     except Exception as e:
@@ -137,7 +154,7 @@ def reset_image():
 # Create the main window using TkinterDnD
 root = TkinterDnD.Tk()
 root.title("Image Enhancer and Resizer Editor")
-root.geometry("600x750")
+root.geometry("600x800")
 
 # Create and configure the drop zone
 drop_zone = tk.Label(root, text="Drag and drop an image here", bg="lightgrey", height=4)
@@ -178,6 +195,13 @@ cartoon_label.grid(row=3, column=0, padx=5, pady=5)
 cartoon_slider = tk.Scale(sliders_frame, from_=1, to=5, orient=tk.HORIZONTAL, state=tk.DISABLED, command=lambda x: update_preview())
 cartoon_slider.set(1)
 cartoon_slider.grid(row=3, column=1, padx=5, pady=5)
+
+# Cartoon effect alpha blending slider
+cartoon_alpha_label = tk.Label(sliders_frame, text="Cartoon Alpha")
+cartoon_alpha_label.grid(row=4, column=0, padx=5, pady=5)
+cartoon_alpha_slider = tk.Scale(sliders_frame, from_=1, to=10, orient=tk.HORIZONTAL, state=tk.DISABLED, command=lambda x: update_preview())
+cartoon_alpha_slider.set(5)
+cartoon_alpha_slider.grid(row=4, column=1, padx=5, pady=5)
 
 # Create resize checkbox
 resize_var = tk.BooleanVar()
